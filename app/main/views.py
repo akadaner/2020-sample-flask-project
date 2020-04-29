@@ -66,9 +66,9 @@ def scatterer():
         session['LongitudinalSpeed'] = form.longitudinal.data
         session['TransverseSpeed'] = form.transverse.data
         session['DensityOfScatterer'] = form.density_of_scatter.data
-        session['Frequency'] = form.frequency.data
-        session['SpeedOfSound'] = form.speed_of_sound.data
-        session['DensityOfMedium'] = form.density_of_medium.data
+        session['Frequency'] = json.loads(model_info['params'])['frequency']
+        session['SpeedOfSound'] = json.loads(model_info['params'])['speed_of_sound']
+        session['DensityOfMedium'] = json.loads(model_info['params'])['density_of_medium']
         session['Type'] = form.type_value.data
         session['From'] = form.from_value.data
         session['To'] = form.to_value.data
@@ -108,9 +108,6 @@ def scatterer():
         form.longitudinal.data = None
         form.transverse.data = None
         form.density_of_scatter.data = None
-        form.frequency.data = None
-        form.speed_of_sound.data = None
-        form.density_of_medium.data = None
         form.type_value.data = None
         form.from_value.data = None
         form.to_value.data = None
@@ -126,6 +123,9 @@ def modelfield():
     if request.method == 'POST' and form.validate_on_submit():
         file_bytes = request.files['input_file'].read()
         session['dx'] = form.dxvalue.data
+        session['frequency'] = form.frequency.data
+        session['speed_of_sound'] = form.speed_of_sound.data
+        session['density_of_medium'] = form.density_of_medium.data
         session['model_name'] = form.model_name.data
 
         url = '{}/savemodel'.format(host)
@@ -135,7 +135,9 @@ def modelfield():
         data = {
             'ModelName': session['model_name'],
             'Dx': session['dx'],
-            'Parameters': json.dumps({'dx': session['dx']}),
+            'Frequency': session['frequency'],
+            'SpeedOfSound': session['speed_of_sound'],
+            'DensityOfMedium': session['density_of_medium']
         }
         files = {
             'ModelFile': file_bytes
@@ -144,6 +146,7 @@ def modelfield():
         if r.status_code != 200 and r.status_code != 201:
             flash('Exception occurred {}'.format(r.content), 'error')
         else:
+            print(r.content)
             figure = json.loads(r.content)['figure']
             flash('Model {}  successfully loaded!'.format(session['model_name']), 'info')
     else:

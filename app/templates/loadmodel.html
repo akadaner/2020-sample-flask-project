@@ -15,8 +15,25 @@
     <form method="POST" action="/loadmodel" enctype="multipart/form-data">
         {{ form.hidden_tag() }}
         {{ wtf.form_field(form.input_file) }}
-        {{ wtf.form_field(form.dxvalue) }}
         {{ wtf.form_field(form.model_name) }}
+        <big> <strong> Wave parameters </strong></big>
+        <br>
+        <br>
+        <div class="row" >
+            <div class="form-group col-md-6">
+                {{ wtf.form_field(form.dxvalue, class='form-control', placeholder='DX') }}
+            </div>
+            <div class="form-group col-md-6">
+                {{ wtf.form_field(form.frequency, class='form-control', placeholder='Frequency') }}
+            </div>
+            <div class="form-group col-md-6">
+                {{ wtf.form_field(form.speed_of_sound, class='form-control', placeholder='Speed of sound') }}
+            </div>
+            <div class="form-group col-md-6">
+                {{ wtf.form_field(form.density_of_medium, class='form-control', placeholder='Density of medium') }}
+            </div>
+        </div>
+
         {{ wtf.form_field(form.submit) }}
     </form>
 </div>

@@ -6,7 +6,6 @@ if os.path.exists('.env'):
         if len(var) == 2:
             os.environ[var[0]] = var[1]
 
-from flask_script import Manager
 from app import create_app
 
 print(os.getenv('FLASK_CONFIG'))

@@ -3,7 +3,7 @@ from io import BytesIO
 import requests
 import json
 from . import main
-from .forms import ModelResultsForm, ScattererForm, UploadForm
+from .forms import ModelResultsForm, ScattererForm, UploadForm, CreateForm
 from .. import host_utils
 
 host = host_utils.host
@@ -76,6 +76,11 @@ def scatterer():
         session['Dx'] = json.loads(model_info['params'])['dx']
         session['ModelPath'] = 'models/{}.mat'.format(model_info['model_name'])
         session['ModelName'] = model_info['id']
+        if 'z_surf' in json.loads(model_info['params']).keys():
+            z_surf = json.loads(model_info['params'])['z_surf']
+        else:
+            z_surf = 0.
+        session['ZSurf'] = z_surf
         url = '{}/scatterer'.format(host)
         headers = {
             'cache-control': "no-cache",
@@ -94,7 +99,8 @@ def scatterer():
             'To': session['To'],
             'Step': session['Step'],
             'ModelPath': session['ModelPath'],
-            'ModelName': session['ModelName']
+            'ModelName': session['ModelName'],
+            'ZSurf': session['ZSurf']
         }
         r = requests.post(url, headers=headers, data=data)
         if r.status_code != 200 and r.status_code != 201:
@@ -114,6 +120,35 @@ def scatterer():
         form.step.data = None
 
     return render_template('scatterer.html', form=form, figure=figure, data=data)
+
+
+@main.route('/createmodel', methods=['GET', 'POST'])
+def create_model():
+    form = CreateForm()
+    figure = None
+    if request.method == 'POST' and form.validate_on_submit():
+        data = {
+            'RadiusOfHole': form.radius_of_hole.data,
+            'RadiusOfTransducer': form.radius_of_transducer.data,
+            'SpatialStep': form.spatial_step.data,
+            'CurvativeRadius': form.curvative_radius.data,
+            'Frequency': form.frequency.data,
+            'DensityOfWater': form.density_of_water.data,
+            'SpeedSoundInWater': form.speed_of_sound_in_water.data,
+            'PressureAmplitude': form.pressure_amplitude.data,
+            'ModelName': form.model_name.data
+        }
+        headers = {
+            'cache-control': "no-cache",
+        }
+        url = '{}/createmodel'.format(host)
+        r = requests.post(url, headers=headers, data=data)
+        if r.status_code != 200 and r.status_code != 201:
+            flash('Exception occurred {}'.format(r.content), 'error')
+        else:
+            figure = json.loads(r.content)['figure']
+            flash('Model successfully loaded!', 'info')
+    return render_template('createmodel.html', form=form, figure=figure)
 
 
 @main.route("/loadmodel", methods=['GET', 'POST'])

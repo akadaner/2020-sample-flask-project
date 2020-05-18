@@ -25,8 +25,8 @@ class UploadForm(FlaskForm):
     model_name = StringField("Enter model name:", validators=[Required()])
     dxvalue = FloatField("Enter value dx, m: ", validators=[Required()])
     frequency = FloatField("Enter value of frequency", default=1000000)
-    speed_of_sound = FloatField("Enter value speed of sound", default=1500.0)
-    density_of_medium = FloatField("Enter density of medium", default=1000.0)
+    speed_of_sound = FloatField("Enter value of speed of sound", default=1500.0)
+    density_of_medium = FloatField("Enter of density of medium", default=1000.0)
     submit = SubmitField(label="Submit")
 
 
@@ -40,6 +40,19 @@ class ScattererForm(FlaskForm):
     from_value = FloatField("Enter begin coordinate value", default=-0.02)
     to_value = FloatField("Enter end coordinate value", default=0.02)
     step = FloatField("Enter step value", default=0.001)
+    submit = SubmitField(label="Submit")
+
+
+class CreateForm(FlaskForm):
+    model_name = StringField('Enter model name', validators=[Required()])
+    radius_of_hole = FloatField('Enter value of radius of hole', default=0.)
+    radius_of_transducer = FloatField('Enter value of radius of transducer', default=0.05)
+    spatial_step = FloatField('Enter value of dx', default=0.001)
+    curvative_radius = FloatField('Enter value of curvative radius', default=0.07)
+    frequency = FloatField('Enter value of frequency', default=1000000.)
+    density_of_water = FloatField('Enter density of medium', default=1000.)
+    speed_of_sound_in_water = FloatField('Enter value of speed of sound', default=1500.)
+    pressure_amplitude = FloatField('Enter value of pressure amplitude', default=1.)
     submit = SubmitField(label="Submit")
 
 

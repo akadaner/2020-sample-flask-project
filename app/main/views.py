@@ -162,6 +162,7 @@ def modelfield():
         session['speed_of_sound'] = form.speed_of_sound.data
         session['density_of_medium'] = form.density_of_medium.data
         session['model_name'] = form.model_name.data
+        session['z_surf'] = form.z_surf.data
 
         url = '{}/savemodel'.format(host)
         headers = {
@@ -172,7 +173,8 @@ def modelfield():
             'Dx': session['dx'],
             'Frequency': session['frequency'],
             'SpeedOfSound': session['speed_of_sound'],
-            'DensityOfMedium': session['density_of_medium']
+            'DensityOfMedium': session['density_of_medium'],
+            'ZSurf': session['z_surf']
         }
         files = {
             'ModelFile': file_bytes
@@ -188,7 +190,6 @@ def modelfield():
         flash_errors(form)
 
     request.files = None
-    form.dxvalue.data = None
     form.input_file.data = None
     form.model_name.data = None
 

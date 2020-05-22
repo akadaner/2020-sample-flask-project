@@ -23,16 +23,17 @@ class UploadForm(FlaskForm):
 
     input_file = FileField('', validators=validators)
     model_name = StringField("Enter model name:", validators=[Required()])
-    dxvalue = FloatField("Enter value dx, m: ", validators=[Required()])
+    dxvalue = FloatField("Enter value dx, m: ", default=0.001)
     frequency = FloatField("Enter value of frequency", default=1000000)
     speed_of_sound = FloatField("Enter value of speed of sound", default=1500.0)
     density_of_medium = FloatField("Enter of density of medium", default=1000.0)
+    z_surf = FloatField("Enter Z coordinate of hologram, m", default=0.0)
     submit = SubmitField(label="Submit")
 
 
 class ScattererForm(FlaskForm):
     model_names_list = SelectField('Field name', coerce=int, validators=[InputRequired()])
-    radius = FloatField("Enter value radius, mm", default=0.0001)
+    radius = FloatField("Enter value radius, m", default=0.0001)
     longitudinal = FloatField("Enter longitudinal speed of sound, m/s", default=2620.0)
     transverse = FloatField("Enter transverse speed of sound, m/s", default=1080.0)
     density_of_scatter = FloatField("Enter density of scatterer, kg/m^3", default=1125.0)
